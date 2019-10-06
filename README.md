@@ -19,6 +19,7 @@ Delta brings language syntax highlighting, within-line insertion/deletion detect
 
 Executables: [Linux](https://github.com/dandavison/delta/releases/download/0.0.12/delta-0.0.12-x86_64-unknown-linux-musl.tar.gz) | [MacOS](https://github.com/dandavison/delta/releases/download/0.0.12/delta-0.0.12-x86_64-apple-darwin.tar.gz) | [Windows](https://github.com/dandavison/delta/releases/download/0.0.12/delta-0.0.12-x86_64-pc-windows-msvc.zip) | [All](https://github.com/dandavison/delta/releases)
 
+
 Homebrew:
 ```sh
 brew tap dandavison/delta https://github.com/dandavison/delta
@@ -39,6 +40,11 @@ Alternatively, you can edit your `.gitconfig` directly. Delta accepts many comma
 ```
 [core]
     pager = delta --dark --plus-color="#012800" --minus-color="#340001" --theme="base16-ocean.dark"
+```
+Or, to use docker,
+```
+[core]
+    pager = docker run --rm -i kyokley/delta --dark --plus-color="#012800" --minus-color="#340001" --theme="base16-ocean.dark"
 ```
 
 All git commands that display diff output should now display syntax-highlighted output. For example:
