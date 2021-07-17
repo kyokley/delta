@@ -34,6 +34,9 @@ pub struct Alignment<'a> {
 impl<'a> Alignment<'a> {
     /// Fill table for Levenshtein distance / alignment computation
     pub fn new(x: Vec<&'a str>, y: Vec<&'a str>) -> Self {
+        // TODO: Something about the alignment algorithm requires that the first two items in the
+        // token stream are ["", " "]. In practice this means that the line must have a leading
+        // space, and that the tokenization regex cooperates.
         let dim = [y.len() + 1, x.len() + 1];
         let table = vec![
             Cell {
@@ -69,13 +72,10 @@ impl<'a> Alignment<'a> {
             };
         }
 
-        for (i, x_i) in (1..=self.x.len()).zip(self.x.iter()) {
-            for (j, y_j) in (1..=self.y.len()).zip(self.y.iter()) {
-                let (left, diag, up) = (
-                    self.index(i - 1, j),
-                    self.index(i - 1, j - 1),
-                    self.index(i, j - 1),
-                );
+        for (i, x_i) in self.x.iter().enumerate() {
+            for (j, y_j) in self.y.iter().enumerate() {
+                let (left, diag, up) =
+                    (self.index(i, j + 1), self.index(i, j), self.index(i + 1, j));
                 let candidates = [
                     Cell {
                         parent: left,
@@ -94,7 +94,7 @@ impl<'a> Alignment<'a> {
                         cost: self.table[up].cost + INSERTION_COST,
                     },
                 ];
-                let index = self.index(i, j);
+                let index = self.index(i + 1, j + 1);
                 self.table[index] = candidates
                     .iter()
                     .min_by_key(|cell| cell.cost)
